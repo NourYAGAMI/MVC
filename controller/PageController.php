@@ -1,12 +1,27 @@
 <?php
 class PageController extends Controller {
 
-	function view($id){
+	function index()
+	{
+		# code...
+
 		$this->loadModel('Post');
-		$d['Page']= $this->Post->findFirst(array(
+		$d['posts']=$this->Post->find(array(
+					'conditions' => array('online'=>1,'type' =>'page')
+				));
+				$this->set($d);
+	}
+	
+
+
+	function view($id) {
+
+		$this->loadModel('Post');
+
+		$d['page']= $this->Post->findFirst(array(
 			'conditions' => array('online'=>1, 'id'=>$id, 'type' =>'page')
 			));
-		if(empty($d['Page'])){
+		if(empty($d['page'])){
 			$this->e404('page introuvable');
 		}
 
@@ -14,14 +29,17 @@ class PageController extends Controller {
 		$this->set($d);
 	}
 
+
 // recupérer le menu pour la page appelée
 
 	function getMenu(){
 		$this->loadModel('Post');
 		return $this->Post->find(array(
-			'conditions' => array('online'=>1, 'type' =>'page')
+			'conditions' => array('online'=>1, 'type' =>'post')
 		));
 	}
+
+
 }
 
 ?>

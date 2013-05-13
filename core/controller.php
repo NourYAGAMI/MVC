@@ -2,33 +2,32 @@
 
 	class controller{	
 
-	public $request;  //objet request 
+	public $request;  // objet request 
 	public $vars= array();  // variable a passer pour la vue
 	public $layout= 'default'; // layout a yse pour rendre la vue
 	private $rendered= false; // si le rendu a passé ou pas
 
 
-	function __construct($request = null){
-		if ($request){
-		$this->request = $request;	//stocker la request dans l'instance
+	function __construct($request=null){
+		if ($request) {
+		$this->request = $request;		//stocker la request dans l'instance
 		}
 	}
 
 	public function render($view){
-		
 		if($this->rendered){return false;}
 		extract($this->vars);
 		if (strpos($view,'/')===0){
-				$view = ROOT.DS.'view'.DS.$view.'.php';
+				$view= ROOT.DS.'view'.DS.$view.'.php';
 		}else{
-				$view = ROOT.DS.'view'.DS.$this->request->controller.DS.$view.'.php';
+				$view= ROOT.DS.'view'.DS.$this->request->controller.DS.$view.'.php';
 
 		}
 		ob_start();
 		require ($view);
 		$content_for_layout= ob_get_clean();
 		require ROOT.DS.'view'.DS.'layout'.DS.$this->layout.'.php';
-		$this->rendered = true;
+		$this->rendered= true;
 	}
 
 	public function  set($key, $value=null){
@@ -43,12 +42,9 @@
 
 
 	function loadModel($name){
-
-		$file = ROOT.DS.'model'.DS.$name.'.php';		
+		$file = ROOT.DS.'model'.DS.$name.'.php';
 		require_once($file);
-		if(!isset($this->$name)){
-			$this->$name = new $name();
-	    }
+		$this->$name = new $name();
 	}
 
 
@@ -66,11 +62,11 @@
 	/**
 	* Function pour appeler un controlleur depuis une vue;
 	*/
-    function request($controller, $action){
+    function request($controller,$action){
 		$controller .= 'Controller';
-		require_once ROOT.DS.'controller'.DS.$controller.'.php';
+		require_once(ROOT.DS.'controller'.DS.$controller.'.php');
 		$c = new $controller();
-		return $c->$action();		
+		return $c->$action();
 	}
 
 	function redirect($url, $code = null){

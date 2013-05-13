@@ -15,10 +15,6 @@ class Router{
 	static $routes = array(); 
 	static $prefixes = array();
 
-    /*
-     * Ajoute un prefix au Routing
-     */
-
 	static function prefix($url, $prefix){
 		self::$prefixes[$url] = $prefix;
 	}
@@ -28,7 +24,6 @@ class Router{
 	* @param $url Url à parser
 	* @return tableau contenant les paramètres
 	**/
-
 	static function parse($url,$request){
 		$url = trim($url,'/'); 
 		if(empty($url)){
@@ -62,11 +57,11 @@ class Router{
 		
 		return true; 
 	}
-	
-    /*
-     * Permet de connecter une url à une action particulere
-     */
 
+
+	/**
+	* Connect
+	**/
 	static function connect($redir,$url){
 		$r = array();
 
@@ -102,12 +97,9 @@ class Router{
 		self::$routes[] = $r; 
 	}
 
-	 /*
-     * Permet de generer une url a partir d'une url originale
-     * controller/action(/:param/:param/:param...)
-     * 
-     */
-
+	/**
+	* 
+	**/
 	static function url($url){
 		foreach(self::$routes as $v){
 			if(preg_match($v['origin'],$url,$match)){
@@ -118,7 +110,7 @@ class Router{
 				}
 				return BASE_URL.str_replace('//','/','/'.$v['redir']).$match['args']; 
 			}
-			foreach (self::$prefixes as $k => $v){
+			foreach (self::$prefixes as $k => $v) {
 				if(strpos($url, $v) === 0){
 					$url = str_replace($v, $k, $url);
 				}				

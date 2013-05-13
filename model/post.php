@@ -1,7 +1,11 @@
 <?php
 
-class Post extends Model{
-	public $table='posts';	
-
-
+class post extends Model {
+	public $table='posts';
+	public $pdo;
+	
+function __construct()
+	{
+		# code...
+	}
 }
