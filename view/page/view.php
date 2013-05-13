@@ -1,6 +1,6 @@
-<?php $title_for_layout= $page->name; ?>
+<?php $title_for_layout = $Page->name; ?>
 
-<h1><?php echo $page->name; ?></h1>
+<h1><?php echo $Page->name; ?></h1>
 
-<?php echo $page->content; ?>
+<?php echo $Page->content; ?>
 

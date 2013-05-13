@@ -1,53 +1,50 @@
 <?php
-
 class Model{
-
 		
 	static $connections = array();
-
-	public $table = false;
+	
 	public $db = 'default';
+	public $table = false;
 	public $current_db;
 	public $primaryKey='id';
 
 	 public function __construct(){
-		
+
 		//initialisations
-			if($this->table === false){
-			$this->table = strtolower(get_class($this)).'s';	
+		if($this->table === false){
+			$this->table = strtolower(get_class($this)).'s';
 		}
 
 		//connexion BDD
 
-		$db = Conf::$databases[$this->db];
-
-
+		$conf = Conf::$databases[$this->db];
+		
 		if(isset(Model::$connections[$this->db])){
 			$this->current_db = Model::$connections[$this->db];
 			return true;
 		}
 
 		try{
-			$mysqli = (mysqli_connect($db['host'],
-									$db['login'],
-									$db['password'],
-									$db['dbname']
-				) or die ("could not connect to mysql"));
+			$mysqli =  mysqli_connect($conf['host'],$conf['login'],$conf['password'],$conf['dbname']);
+				 /**or die ("could not connect to mysql")**/
 
-			Model::$connections = $mysqli;
+		
+			Model::$connections[$this->db] = $mysqli;
 			$this->current_db = $mysqli;		
 
 		}
 		catch(MYSQLException $e){
 				die($e->getMessage());
-			}	
+			}
+
+
 		}
 
 
 
 
 	public function find($req){
-		$sql = 'SELECT';
+		$sql = 'SELECT ';
 
 		if(isset($req['fields'])){
 			if (is_array($req['fields'])) {
@@ -59,7 +56,7 @@ class Model{
 			$sql .='*';
 		}
 
-		$sql .= 'FROM '.$this->table;
+		$sql .= ' FROM '.$this->table;
 
 
 		//construction de la condition
@@ -69,11 +66,11 @@ class Model{
 				$sql .= $req['conditions'];
 			}else{
 				$cond = array();
-				foreach ($req['conditions'] as $key => $value) {
-					if(!is_numeric($value)){
-						$value = "'".mysql_real_escape_string($value)."'";
+				foreach ($req['conditions'] as $k => $v) {
+					if(!is_numeric($v)){
+						$v = "'".mysql_real_escape_string($v)."'";
 					}					
-					$cond[] = "$key = $value";
+					$cond[] = "$k = $v";
 				}
 				$sql .= implode(' AND ', $cond);
 			}
@@ -82,34 +79,34 @@ class Model{
 		if(isset($req['limit'])){
 			$sql .= ' LIMIT '.$req['limit'];
 			
-		}
+		}	
 
 		
-		// print_r(Model::$connections[$this->current_db]);
-
 		$pre = mysqli_query($this->current_db,$sql);
 
-		$r= mysqli_fetch_assoc($pre);
-		return $r;
-
+		$res = mysqli_fetch_object($pre);
+		return $res;
+		// mysql_free_result($res);
+		// while($resultat = mysql_fetch_row($requete)){}
 		
 	}
 
-	public function findFirst($req){
 
+
+	public function findFirst($req){
 	return current($this->find($req));
 	}
 
 	public function FindCount($conditions){
-		$res=$this->FindFirst(array(
-			'fields'=> 'count('.$this->primaryKey.') as count',
+		$res = $this->FindFirst(array(
+			'fields'=> ' count('.$this->primaryKey.') as count ',
 			'conditions'=> $conditions
 			));
-		return $res->count();
+		return $res;
 	}
 
 	public function delete($id){
-		$sql = "DELETE FORM {$this->table} WHERE {$this->primaryKey} = $id ";
+		$sql = " DELETE FORM {$this->table} WHERE {$this->primaryKey} = $id ";
 		$this->current_db->query($sql);
 	}
 
@@ -133,9 +130,9 @@ class Model{
 				
 		$pre = mysqli_query($this->current_db,$sql);
 
-		$r= mysqli_fetch_assoc($pre);
-		return $r;
-		// $pre->execute($d);	
+		/**$r= mysqli_fetch_assoc($pre);
+		return $r;**/
+		$pre->execute($d);	
 	} 
 
 } 
