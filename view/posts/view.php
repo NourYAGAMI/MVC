@@ -1,7 +1,7 @@
-<?php $title_for_layout= $page->name; ?>
+<?php $title_for_layout= $posts->name; ?>
 
-<h1><?php echo $page->name; ?></h1>
+<h1><?php echo $posts->name; ?></h1>
 
-<?php echo $page->content; ?>
+<?php echo $posts->content; ?>
 
-<?php debug($page); ?>
+<?php debug($posts); ?>

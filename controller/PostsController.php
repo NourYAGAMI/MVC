@@ -1,8 +1,7 @@
 <?php
 class PostsController extends Controller {
 
-	function index()
-	{
+	function index(){
 		$perPage = 10;
 		$this->loadModel('Post');
 		$condition = array('online'=>1, 'type' =>'post');
@@ -17,11 +16,11 @@ class PostsController extends Controller {
 	
 
 
-	function view($id,$slug) {
+	function view($id,$slug){
 
 		$this->loadModel('Post');
 		$d['page']= $this->Post->findFirst(array(
-			'fields' => 'id,slug,content,name',
+			'fields' => ' id, slug, content, name ',
 			'conditions' => array('online'=>1, 'id'=>$id, 'type' =>'post')
 			));
 		

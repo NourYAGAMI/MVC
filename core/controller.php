@@ -3,12 +3,12 @@
 	class controller{	
 
 	public $request;  // objet request 
-	public $vars= array();  // variable a passer pour la vue
-	public $layout= 'default'; // layout a yse pour rendre la vue
-	private $rendered= false; // si le rendu a passé ou pas
+	public $vars = array();  // variable a passer pour la vue
+	public $layout = 'default'; // layout a yse pour rendre la vue
+	private $rendered = false; // si le rendu a passé ou pas
 
 
-	function __construct($request=null){
+	function __construct($request=null){		
 		if ($request) {
 		$this->request = $request;		//stocker la request dans l'instance
 		}
@@ -18,10 +18,9 @@
 		if($this->rendered){return false;}
 		extract($this->vars);
 		if (strpos($view,'/')===0){
-				$view= ROOT.DS.'view'.DS.$view.'.php';
+				$view = ROOT.DS.'view'.DS.$view.'.php';
 		}else{
-				$view= ROOT.DS.'view'.DS.$this->request->controller.DS.$view.'.php';
-
+				$view = ROOT.DS.'view'.DS.$this->request->controller.DS.$view.'.php';
 		}
 		ob_start();
 		require ($view);
@@ -44,7 +43,9 @@
 	function loadModel($name){
 		$file = ROOT.DS.'model'.DS.$name.'.php';
 		require_once($file);
+		if(!isset($name)){			
 		$this->$name = new $name();
+		}
 	}
 
 

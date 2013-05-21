@@ -4,9 +4,9 @@
 
 		var $request;
 		
-		function __construct()	{
+		function __construct(){
 			$this->request= new Request(); 
-			router:: parse($this->request->url, $this->request);
+			Router:: parse($this->request->url, $this->request);
 			$controller= $this->loadController();
 			$action = $this->request->action;
 			if($this->request->prefix){
@@ -27,6 +27,7 @@
 			$controller= new Controller($this->request);
 			$controller->Session = new Session();
 			$controller->set('message', $message);
+			$controller->e404($message);
 			/*$controller->render('/errors/404');
 			die();*/
 		}	
